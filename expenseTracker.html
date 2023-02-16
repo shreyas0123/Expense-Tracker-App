@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Expense Tracker App</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        
+    </head>
+    <body>
+        <div class = "container"></div>
+        <h2>Expense Tracker App</h2>
+        <form  onsubmit="saveToLocalStorage(event)" class="form-inline" > <!--when i click Add Expense button onsubmit will get triggered and event is when you click the button event will happen thats noting but form gets submitted-->
+            <div class="form-group"> <!-- used for optimum spacing -->
+                <label>Choose expenseamount:</label>
+                <input type="text" id="expenseamount" name="expenseamount" class="form-control" required> <!--form-control add this in input,text,select area-->
+            </div>
+            <div class="form-group">    
+                <label>Choose description:</label>
+                <input type="text" id="description" name="description" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Choose a category:</label>
+                <select id="category" name="category" class="form-control" required>
+                    <option>fuel</option>
+                    <option>food</option>
+                    <option>movie</option>
+                    <option>electricity</option>
+                </select>
+            </div>
+            <button>Add Expense</button>
+        </form>
+        <ul id="listOfitems"></ul>
+        <script>
+            function saveToLocalStorage(event){
+                event.preventDefault();
+                const expense = event.target.expenseamount.value; //hold on expenseamount like that
+                const descript= event.target.description.value;
+                const categ = event.target.category.value;
+
+                const obj ={
+                    expense,
+                    descript,
+                    categ
+                }
+                localStorage.setItem(obj.descript,JSON.stringify(obj))//obj.descript is keys and stringyfy of object is stored here
+                showUserOnScreen(obj);
+            }
+            function showUserOnScreen(obj){
+                const parentEle = document.getElementById('listOfitems');
+                const childEle = document.createElement('li');
+                childEle.textContent = obj.expense+'-'+obj.descript+'-'+obj.categ+'-';
+                parentEle.appendChild(childEle);
+                
+                const delButton = document.createElement('input');
+                delButton.type = "button";
+                delButton.value = "Delete";
+                childEle.append(delButton);
+
+                delButton.onclick = () => {
+                    localStorage.removeItem(obj.descript);
+                    parentEle.removeChild(childEle);
+                }
+
+                const editButton = document.createElement('input');
+                editButton.type = "button";
+                editButton.value = "Edit";
+                childEle.append(editButton);
+
+                editButton.onclick =() =>{
+                    localStorage.removeItem(obj.descript);
+                    parentEle.removeChild(childEle);
+                    document.getElementById('expenseamount').value=obj.expense;
+                    document.getElementById('description').value=obj.descript;
+                    document.getElementById('category').value=obj.categ;
+                }
+            }  
+        </script>
+
+    </body>
+    
+</html>
